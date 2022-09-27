@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="./runtime-dom.global.js"></script>
+  <script src=""></script>
+  <script>
+    const { createRenderer, h, render, Text, Fragment, reactive, getCurrentInstance, onBeforeMount } = VueRuntimeDOM
+    // render(h('h1', {style: {color: 'red'}, onClick: () => console.log('click')}, [h('span', 'vue'), h('span', '3')]), app)
+    // render(h(Fragment,[h(Text, 'hello'), h('h1', 'hello')]), app)
+    const Children = {
+      props: {
+        name: String
+      },
+      setup(props, context) {
+        // const data = reactive({
+        //   name: 'children'
+        // })
+        // return () => {
+        //   return h('h1', {}, [h('span', this.name)])
+        // }
+        onBeforeMount(() => {
+          console.log('onBeforeMount')
+        })
+      },
+      render() {
+        return h('h1', {}, [h('span', this.name)])
+      }
+    }
+    const App = {
+      setup(props, context) {
+        const data = reactive({
+          name: '1'
+        })
+        setTimeout(() => {
+          data.name = '2'
+        }, 2000)
+        const fn = () => {
+          data.name ++
+        }
+        return () => {
+          return h('h1', {style: {color: 'red'}, onClick: fn}, [h('span', data.name), h(Children, {name: data.name})])
+        }
+      },
+      // render(proxy) {
+      //   return h('div', {}, 'vue')
+      // }
+    }
+    render(h(App, {}), app)
+  </script>
+</body>
+</html>
